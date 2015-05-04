@@ -84,25 +84,25 @@ void set_line(char* line) {
 	st_line_pos = 0;
 }
 
-void parse_line(char* buf) {
-	Token token;
-	set_line(buf);
+// void parse_line(char* buf) {
+// 	Token token;
+// 	set_line(buf);
 
-	for(;;) {
-		get_token(&token);
-		if(token.kind == END_OF_LINE_TOKEN) {
-			break;
-		} else {
-			printf("kind..%d, str..%s\n", token.kind, token.str);
-		}
-	}
-}
+// 	for(;;) {
+// 		get_token(&token);
+// 		if(token.kind == END_OF_LINE_TOKEN) {
+// 			break;
+// 		} else {
+// 			printf("kind..%d, str..%s\n", token.kind, token.str);
+// 		}
+// 	}
+// }
 
-int main(int argc, char** argv) {
-	char buf[1024];
-	while(fgets(buf, 1024, stdin) != NULL) {
-		parse_line(buf);
-	}
+// int main(int argc, char** argv) {
+// 	char buf[1024];
+// 	while(fgets(buf, 1024, stdin) != NULL) {
+// 		parse_line(buf);
+// 	}
 
-	return 0;
-}
+// 	return 0;
+// }
