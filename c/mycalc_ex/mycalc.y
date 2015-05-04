@@ -46,6 +46,8 @@ primary_expression
     : DOUBLE_LITERAL
     | LP expression RP
     { $$ = $2;}
+    | SUB primary_expression
+    { $$ = -$2;}
     ;                 
 %%
 int
