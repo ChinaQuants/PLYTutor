@@ -23,7 +23,7 @@ int yywrap(void) {
 	return DOUBLE_LITERAL;
 }
 
-[\t];
+[ \t] ;
 
 . {
     fprintf(stderr, "lexical error.\n");
