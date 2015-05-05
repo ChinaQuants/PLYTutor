@@ -4,8 +4,11 @@ from token import Token
 from token import TokenKind
 from enum import IntEnum
 
-st_line = ''
-st_line_pos = 0
+class LineHolder(object):
+
+    def __init__(self):
+        self.st_line = ''
+        self.st_line_pos = 0
 
 class LexerStatus(IntEnum):
     INITIAL_STATUS = 0
@@ -13,16 +16,14 @@ class LexerStatus(IntEnum):
     DOT_STATUS = 2
     IN_FRAC_PART_STATUS = 3
 
-def get_token(token):
-    global st_line
-    global st_line_pos
+def get_token(token, line_holder):
 
     out_pos = 0
     status = LexerStatus.INITIAL_STATUS
     token.kind = TokenKind.BAD_TOKEN
 
-    while st_line_pos < len(st_line):
-        current_char = st_line[st_line_pos]
+    while line_holder.st_line_pos < len(line_holder.st_line):
+        current_char = line_holder.st_line[line_holder.st_line_pos]
         if (status == LexerStatus.IN_INT_PART_STATUS or status == LexerStatus.IN_FRAC_PART_STATUS) \
             and not current_char.isdigit() and current_char != '.':
             token.kind = TokenKind.NUMBER_TOKEN
@@ -33,17 +34,17 @@ def get_token(token):
             if current_char == '\n':
                 token.kind = TokenKind.END_OF_LINE_TOKEN
                 return
-            st_line_pos += 1
+            line_holder.st_line_pos += 1
             continue
 
         if out_pos >= len(token.str):
-            token.str += st_line[st_line_pos]
+            token.str += line_holder.st_line[line_holder.st_line_pos]
         else:
             tmp = list(token.str)
-            tmp[out_pos] = st_line[st_line_pos]
+            tmp[out_pos] = line_holder.st_line[line_holder.st_line_pos]
             token.str = ''.join(tmp[:out_pos+1])
 
-        st_line_pos += 1
+        line_holder.st_line_pos += 1
         out_pos += 1
 
         if current_char == '+':
@@ -78,20 +79,19 @@ def get_token(token):
             raise ValueError('bad character(%s)' % current_char)
 
 
-def set_line(line):
-    global st_line
-    global st_line_pos
-    st_line = line
-    st_line_pos = 0
+def set_line(line, line_holder):
+    line_holder.st_line = line
+    line_holder.st_line_pos = 0
 
 if __name__ == '__main__':
 
     def parse_line(buf):
+        line_holder = LineHolder()
         token = Token()
-        set_line(buf)
+        set_line(buf, line_holder)
 
         while True:
-            get_token(token)
+            get_token(token, line_holder)
             if token.kind == TokenKind.END_OF_LINE_TOKEN:
                 break
             else:
